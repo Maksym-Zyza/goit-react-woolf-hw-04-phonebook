@@ -18,11 +18,13 @@ export const App = () => {
       alert(`${name} is already in contacts.`);
       return;
     }
-    setContacts(prev => [{ id: nanoid(), name, number }, ...prev.contacts]);
+    setContacts(prev => [{ id: nanoid(), name, number }, ...prev]);
     console.log('Created successfully');
   };
 
-  const handleChangeFilter = e => setFilter(e.target.name);
+  const handleChangeFilter = e => {
+    setFilter(e.target.value);
+  };
 
   const filteredContacts = contacts => {
     return contacts.filter(contact =>
