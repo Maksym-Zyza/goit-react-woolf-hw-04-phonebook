@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { nanoid } from 'nanoid';
 import './App.scss';
-import testData from './Data/testData.json';
 import ContactForm from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
+import { getDataFromLs } from './utils/helper';
 
 export const App = () => {
-  const [contacts, setContacts] = useState([...testData]);
+  const [contacts, setContacts] = useState(getDataFromLs());
   const [filter, setFilter] = useState('');
 
   const createNewContact = (name, number) => {
@@ -26,7 +26,7 @@ export const App = () => {
     setFilter(e.target.value);
   };
 
-  const filteredContacts = contacts => {
+  const filteredContacts = () => {
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
@@ -36,13 +36,6 @@ export const App = () => {
     setContacts(prev => prev.filter(contact => contact.id !== id));
     console.log('Deleted successfully');
   };
-
-  useEffect(() => {
-    const localData = localStorage.getItem('contacts');
-    if (localData && JSON.parse(localData).length > 0) {
-      setContacts(JSON.parse(localData));
-    }
-  }, []);
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
@@ -56,8 +49,7 @@ export const App = () => {
       <h2>Contacts</h2>
       <Filter filter={filter} handleChange={handleChangeFilter} />
       <ContactList
-        contacts={contacts}
-        filteredContacts={filteredContacts}
+        contacts={filteredContacts()}
         deleteContact={deleteContact}
       />
     </div>
